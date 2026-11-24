@@ -1,0 +1,9 @@
+project:
+  title: "8-bit Adder-Subtractor"
+  author: "Surya Pratama Adi Putra"
+  description: "Rangkaian penjumlahan dan pengurangan 8-bit dengan metode two's complement"
+  language: "Verilog"
+  top_module: "adder_subtractor_8bit"
+  source_files:
+    - "design.v"
+ clock_hz: 0  
