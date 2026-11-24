@@ -6,4 +6,3 @@ project:
   top_module: "adder_subtractor_8bit"
   source_files:
     - "design.v"
- clock_hz: 0  
