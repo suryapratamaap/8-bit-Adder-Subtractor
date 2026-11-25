@@ -13,6 +13,7 @@ module tb;
     reg [39:0] status;     
 
     adder_subtractor_8bit uut (
+        .clk     (1'b0),
         .a       (a),
         .b       (b),
         .mode    (mode),
