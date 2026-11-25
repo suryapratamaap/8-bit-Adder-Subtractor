@@ -1,6 +1,8 @@
 `timescale 1ns/1ps
 
 module tb;
+    reg        clk = 0;
+    reg        rst_n = 0;
     reg  [7:0] a;
     reg  [7:0] b;
     reg        mode;
@@ -10,10 +12,13 @@ module tb;
 
     integer    pass_count;
     integer    fail_count;
-    reg [39:0] status;     
+    reg [39:0] status;
+
+    always #5 clk = ~clk;  
 
     adder_subtractor_8bit uut (
-        .clk     (1'b0),
+        .clk     (clk),
+        .rst_n   (rst_n),
         .a       (a),
         .b       (b),
         .mode    (mode),
@@ -33,8 +38,8 @@ module tb;
             a    = ta;
             b    = tbv;
             mode = tmode;
-            #10;
-
+            @(posedge clk);   
+            #1;               
             if (result === exp_result && cout === exp_cout && overflow === exp_ovf) begin
                 status     = "LULUS";
                 pass_count = pass_count + 1;
@@ -50,19 +55,24 @@ module tb;
     endtask
 
     initial begin
-      
         $dumpfile("tb.vcd");
         $dumpvars(0, tb);
 
         pass_count = 0;
         fail_count = 0;
         a = 8'd0; b = 8'd0; mode = 1'b0;
-        #10;
+
+        // Reset: tahan rst_n = 0 selama 2 tepi clock, lalu lepas
+        rst_n = 1'b0;
+        @(posedge clk);
+        @(posedge clk);
+        #1;
+        $display("Setelah reset: result=%0d cout=%b overflow=%b", result, cout, overflow);
+        rst_n = 1'b1;
 
         $display("=== 8-bit Adder-Subtractor ===");
 
         // ---------------- Pengujian Penjumlahan (mode = 0) ----------------
-        //   (a, b, mode, result, cout, overflow)
         uji(8'd10,  8'd5,  1'b0, 8'd15,  1'b0, 1'b0);  // 10 + 5   = 15
         uji(8'd100, 8'd50, 1'b0, 8'd150, 1'b0, 1'b1);  // 100 + 50 = 150 (signed overflow)
         uji(8'd255, 8'd1,  1'b0, 8'd0,   1'b1, 1'b0);  // 255 + 1  = 0, carry-out = 1
