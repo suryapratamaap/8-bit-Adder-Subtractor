@@ -2,7 +2,7 @@
 
 module adder_subtractor_8bit (
     input  wire       clk,
-    input  wire       rst_n,      
+    input  wire       rst_n,
     input  wire [7:0] a,
     input  wire [7:0] b,
     input  wire       mode,
@@ -18,14 +18,14 @@ module adder_subtractor_8bit (
     assign sum   = {1'b0, a} + {1'b0, b_xor} + {8'b0, mode};
 
     always @(posedge clk) begin
-        if (!rst_n) begin
-            result   &lt;= 8'd0;
-            cout     &lt;= 1'b0;
-            overflow &lt;= 1'b0;
+        if (rst_n == 1'b0) begin
+            result   = 8'd0;
+            cout     = 1'b0;
+            overflow = 1'b0;
         end else begin
-            result   &lt;= sum[7:0];
-            cout     &lt;= sum[8] ^ mode;
-            overflow &lt;= (a[7] == b_xor[7]) && (sum[7] != a[7]);
+            result   = sum[7:0];
+            cout     = sum[8] ^ mode;
+            overflow = (a[7] == b_xor[7]) & (sum[7] != a[7]);
         end
     end
 
