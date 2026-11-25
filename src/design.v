@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 
 module adder_subtractor_8bit (
+    input             clk,
     input  wire [7:0] a,
     input  wire [7:0] b,
     input  wire       mode,
